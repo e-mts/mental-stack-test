@@ -6,16 +6,18 @@ function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Select the message div and the body
-const messageDiv = document.getElementById("message");
+// Function to get a random integer between min (inclusive) and max (exclusive)
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
-// Game settings
-const totalTrials = 5;
+const totalTrials = 10; // Increase the number of trials for longer test duration
 let currentTrial = 0;
 const reactionTimes = [];
 
-// Choose a random target color for the user
 const targetColor = getRandomElement(colors);
+const messageDiv = document.getElementById("message");
+
 messageDiv.textContent = `Click when you see ${targetColor}`;
 
 function displayResults() {
@@ -23,31 +25,36 @@ function displayResults() {
     messageDiv.textContent = `Average reaction time: ${averageTime.toFixed(2)} ms`;
 }
 
-// Function to start a new trial
 function startTrial() {
+    let targetShown = false;
+    const maxFlashCount = getRandomInt(10, 20); // Randomize the number of flashes per trial
     let flashCount = 0;
-    const flashMax = 5;
-    const flashInterval = 500; // 500 milliseconds
+    const minInterval = 200; // Minimum interval between flashes in ms
+    const maxInterval = 1000; // Maximum interval between flashes in ms
 
     const intervalId = setInterval(() => {
-        if (flashCount >= flashMax) {
+        if (flashCount >= maxFlashCount || (targetShown && (flashCount > maxFlashCount / 2))) {
             clearInterval(intervalId);
-            messageDiv.textContent = "Game over! You missed it!";
+            if (!targetShown) {
+                startTrial(); // Restart the trial if the target color didn't show
+            }
             return;
         }
 
         const randomColor = getRandomElement(colors);
         document.body.style.backgroundColor = randomColor;
 
-        // If the random color matches the target color, wait for user click
         if (randomColor === targetColor) {
+            targetShown = true;
             const startTime = new Date().getTime();
             document.body.onclick = () => {
                 const endTime = new Date().getTime();
                 const reactionTime = endTime - startTime;
                 reactionTimes.push(reactionTime);
+
                 clearInterval(intervalId);
                 document.body.onclick = null;
+                document.body.style.backgroundColor = '';
 
                 currentTrial++;
                 if (currentTrial < totalTrials) {
@@ -56,16 +63,18 @@ function startTrial() {
                 } else {
                     displayResults();
                 }
-            }
+            };
         } else {
             document.body.onclick = null;
         }
 
         flashCount++;
-    }, flashInterval);
+        clearInterval(intervalId);
+        setTimeout(startTrial, getRandomInt(minInterval, maxInterval)); // Randomize the interval before next flash
+    }, getRandomInt(minInterval, maxInterval));
 }
 
-// Start the first trial after giving the user a moment to read the instruction
+// Start the game after displaying the initial instructions
 setTimeout(() => {
     messageDiv.textContent = `Trial 1 of ${totalTrials}. Get ready...`;
     setTimeout(startTrial, 2000);
