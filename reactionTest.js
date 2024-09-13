@@ -3,23 +3,25 @@ let targetColor;
 let testRunning = false;
 let startTime, reactionTimes = [], falsePositives = 0;
 
-document.body.onkeypress = (e) => {
-  if (e.code === 'Space') {
+function initializeTest() {
+  document.body.onkeypress = (e) => {
+    if (e.code === 'Space') {
+      if (!testRunning) {
+        startTest();
+      } else {
+        recordReaction();
+      }
+    }
+  };
+
+  document.getElementById('target').onclick = () => {
     if (!testRunning) {
       startTest();
     } else {
       recordReaction();
     }
-  }
-};
-
-document.body.onclick = () => {
-  if (!testRunning) {
-    startTest();
-  } else {
-    recordReaction();
-  }
-};
+  };
+}
 
 function startTest() {
   testRunning = true;
@@ -38,7 +40,7 @@ function showRandomColor() {
 
   startTime = new Date();
   setTimeout(() => {
-    targetDiv.style.backgroundColor = 'white'; // Reset color
+    targetDiv.style.backgroundColor = 'white';
     if (testRunning) setTimeout(showRandomColor, getRandomInterval());
   }, 1000);
 }
@@ -58,12 +60,17 @@ function getRandomInterval() {
   return Math.random() * 2000 + 1000;
 }
 
-// End the test after a certain period (e.g., 20 seconds)
-setTimeout(() => {
+function endTest() {
   testRunning = false;
   let avgReactionTime = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
   alert(`Test ended. Average Reaction Time: ${avgReactionTime} ms, False Positives: ${falsePositives}`);
   document.getElementById('target').style.backgroundColor = 'white';
   document.getElementById('instructions').textContent = 'Press spacebar or click to start';
   document.getElementById('target').textContent = 'Test ended. Press spacebar or click to restart';
-}, 20000);
+}
+
+// Set a timeout to end the test after a certain period (e.g., 20 seconds)
+setTimeout(endTest, 20000);
+
+// Initialize the test when the page loads
+initializeTest();
