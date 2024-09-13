@@ -1,42 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reaction Time Test</title>
-  <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      user-select: none; /* Prevent text selection during the test */
-    }
-    #target {
-      width: 90vw;
-      height: 90vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
-      text-align: center;
-      cursor: pointer; /* Indicate that the area is clickable */
-    }
-    #instructions {
-      font-size: 1.25rem;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Reaction Game</title>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            user-select: none; /* prevent text selection */
+        }
+        #message {
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
-  <div id="instructions">Press spacebar or click to start</div>
-  <div id="target">Press spacebar or click to start</div>
-  <script src="reactionTest.js"></script>
+    <div id="message">Get ready...</div>
+    <script src="script.js"></script>
 </body>
 </html>
