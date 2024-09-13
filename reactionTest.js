@@ -1,29 +1,7 @@
-let targetColor = 'red';
-let otherColors = ['blue', 'green', 'yellow'];
+let colors = ['red', 'blue', 'green', 'yellow'];
+let targetColor;
 let testRunning = false;
 let startTime, reactionTimes = [], falsePositives = 0;
-
-function startTest() {
-  let targetDiv = document.getElementById('target');
-  targetDiv.textContent = '';
-  testRunning = true;
-  document.getElementById('startButton').style.display = 'none';
-  setTimeout(() => showRandomColor(), Math.random() * 2000 + 1000);
-}
-
-function showRandomColor() {
-  if (!testRunning) return;
-  
-  let color = Math.random() < 0.3 ? targetColor : otherColors[Math.floor(Math.random() * otherColors.length)];
-  let targetDiv = document.getElementById('target');
-  targetDiv.style.backgroundColor = color;
-  
-  startTime = new Date();
-  setTimeout(() => {
-    targetDiv.style.backgroundColor = 'white'; // Reset color
-    if (testRunning) setTimeout(showRandomColor, 500);
-  }, 1000);
-}
 
 document.body.onkeypress = (e) => {
   if (e.code === 'Space') {
@@ -43,10 +21,32 @@ document.body.onclick = () => {
   }
 };
 
+function startTest() {
+  testRunning = true;
+  targetColor = colors[Math.floor(Math.random() * colors.length)];
+  document.getElementById('instructions').textContent = `React to the color: ${targetColor}`;
+  document.getElementById('target').textContent = '';
+  setTimeout(() => showRandomColor(), getRandomInterval());
+}
+
+function showRandomColor() {
+  if (!testRunning) return;
+
+  let color = Math.random() < 0.3 ? targetColor : colors[Math.floor(Math.random() * colors.length)];
+  let targetDiv = document.getElementById('target');
+  targetDiv.style.backgroundColor = color;
+
+  startTime = new Date();
+  setTimeout(() => {
+    targetDiv.style.backgroundColor = 'white'; // Reset color
+    if (testRunning) setTimeout(showRandomColor, getRandomInterval());
+  }, 1000);
+}
+
 function recordReaction() {
   let currentColor = document.getElementById('target').style.backgroundColor;
   let reactionTime = new Date() - startTime;
-  
+
   if (currentColor === targetColor) {
     reactionTimes.push(reactionTime);
   } else {
@@ -54,11 +54,16 @@ function recordReaction() {
   }
 }
 
+function getRandomInterval() {
+  return Math.random() * 2000 + 1000;
+}
+
 // End the test after a certain period (e.g., 20 seconds)
 setTimeout(() => {
   testRunning = false;
   let avgReactionTime = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
   alert(`Test ended. Average Reaction Time: ${avgReactionTime} ms, False Positives: ${falsePositives}`);
-  document.getElementById('startButton').style.display = 'block';
-  document.getElementById('target').textContent = 'Press spacebar or click to start';
+  document.getElementById('target').style.backgroundColor = 'white';
+  document.getElementById('instructions').textContent = 'Press spacebar or click to start';
+  document.getElementById('target').textContent = 'Test ended. Press spacebar or click to restart';
 }, 20000);
