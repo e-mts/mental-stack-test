@@ -5,12 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reaction Time Test</title>
   <style>
-    #target { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+    #target {
+      width: 90vw;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+    button {
+      font-size: 1.5rem;
+      padding: 10px 20px;
+    }
   </style>
 </head>
 <body>
-  <div id="target">Press start to begin</div>
-  <button onclick="startTest()">Start</button>
+  <div id="target">Press spacebar or click to start</div>
+  <button id="startButton" onclick="startTest()">Start</button>
   <script src="reactionTest.js"></script>
 </body>
 </html>
